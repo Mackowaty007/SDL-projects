@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
             switch (event.type) {
  
             case SDL_QUIT:
-                // handling of close button
+                //handling of the close button
                 close = 1;
                 break;
  
@@ -69,19 +69,43 @@ int main(int argc, char *argv[])
                 switch (event.key.keysym.scancode) {
                 case SDL_SCANCODE_W:
                 case SDL_SCANCODE_UP:
-                    snakeHeading = 1;
+                    //the code below is used to prevent the player from moving back into himself
+                    if(snakeHeading==2){
+                        break;
+                    }
+                    else{
+                        snakeHeading = 1;
+                    }
                     break;
                 case SDL_SCANCODE_A:
                 case SDL_SCANCODE_LEFT:
-                    snakeHeading = 3;
+                    //the code below is used to prevent the player from moving back into himself
+                    if(snakeHeading==4){
+                        break;
+                    }
+                    else{
+                        snakeHeading = 3;
+                    }
                     break;
                 case SDL_SCANCODE_S:
                 case SDL_SCANCODE_DOWN:
-                    snakeHeading = 2;
+                    //the code below is used to prevent the player from moving back into himself
+                    if(snakeHeading==1){
+                        break;
+                    }
+                    else{
+                        snakeHeading = 2;
+                    }
                     break;
                 case SDL_SCANCODE_D:
                 case SDL_SCANCODE_RIGHT:
-                    snakeHeading = 4;
+                    //the code below is used to prevent the player from moving back into himself
+                    if(snakeHeading==3){
+                        break;
+                    }
+                    else{
+                        snakeHeading = 4;
+                    }
                     break;
                 default:
                     break;
@@ -89,8 +113,7 @@ int main(int argc, char *argv[])
             }
         }
   
-        //printf("%i",snakeBodyPos.size());
-        //std::cout << snakeBodyPos.size() << std::endl;
+        //move all the snake segments
         for (int i=snakeBodyPos.size()-1;i>=1;i--){
 			snakeBodyPos[i][0] = snakeBodyPos[i-1][0];
 			snakeBodyPos[i][1] = snakeBodyPos[i-1][1];
@@ -131,18 +154,12 @@ int main(int argc, char *argv[])
 			//generate random enemy pos
 			enemyPos[0] = rand()%SCREEN_WIDTH /GRID_SIZE;
 			enemyPos[1] = rand()%SCREEN_HEIGHT/GRID_SIZE;
-			
-			//add a new body part
-            for(int x=0;x>snakeBodyPos.size();x++){
-                for(int x=0;x>snakeBodyPos.size();x++){
-                    std::cout << snakeBodyPos.size() << std::endl;
-                }
-            }
-            
-			snakeBodyPos.push_back(std::vector<int> {snakeBodyPos[snakeBodyPos.size()][0],snakeBodyPos[snakeBodyPos.size()][1]});
-			//set the new body part to the last body part position
-			//snakeBodyPos[snakeBodyPos.size()].push_back(snakeBodyPos[snakeBodyPos.size()-1][0]);
-			//snakeBodyPos[snakeBodyPos.size()].push_back(snakeBodyPos[snakeBodyPos.size()-1][1]);
+
+            //add a new body part
+			snakeBodyPos.push_back(std::vector<int>{
+                snakeBodyPos[snakeBodyPos.size()-1][0] = snakeBodyPos[snakeBodyPos.size()-2][0],
+                snakeBodyPos[snakeBodyPos.size()-1][1] = snakeBodyPos[snakeBodyPos.size()-2][1]
+            });
 		}
 		//check if the snake is coliding with itself
 		if(snakeHeading !=0){
@@ -152,7 +169,7 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-
+        SDL_SetRenderDrawColor(rend,100,100,100,255);
         SDL_RenderClear(rend);
 
         //draw snake body
@@ -175,12 +192,12 @@ int main(int argc, char *argv[])
         SDL_SetRenderDrawColor(rend, fruitColor.r, fruitColor.g, fruitColor.b, 255);
         SDL_RenderFillRect(rend,&fruit);
 
+        SDL_RenderCopy(rend, tex, NULL, &dest);
 		//draw game over screen
 		if(isGameOver){
-			//C2D_DrawSprite(&sprites[0].spr);
+            
 		}
 
-        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderPresent(rend);
         // calculates to 60 fps
         SDL_Delay(1000 / 10);
