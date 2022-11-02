@@ -37,19 +37,19 @@ int main(int argc, char *argv[])
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
     SDL_Window* win = SDL_CreateWindow("GAME", // creates a window
-                                       SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED,
-                                       1000, 1000, 0);
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1000, 1000, 0);
  
 
     Uint32 render_flags = SDL_RENDERER_ACCELERATED;
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
     SDL_Surface* surface;
-    surface = IMG_Load("2guys1chopper.jpg");
+    surface = IMG_Load("snakeGameOver.png");
     SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
     SDL_FreeSurface(surface);
-    SDL_Rect dest;
-    SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
+    SDL_Rect dest = {5,5,SCREEN_WIDTH-10,SCREEN_HEIGHT-10};
+    //SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
  
     // animation loop
     while (!close) {
@@ -192,12 +192,11 @@ int main(int argc, char *argv[])
         SDL_SetRenderDrawColor(rend, fruitColor.r, fruitColor.g, fruitColor.b, 255);
         SDL_RenderFillRect(rend,&fruit);
 
-        SDL_RenderCopy(rend, tex, NULL, &dest);
 		//draw game over screen
 		if(isGameOver){
-            
+            SDL_RenderCopy(rend, tex, NULL, &dest);
 		}
-
+        
         SDL_RenderPresent(rend);
         // calculates to 60 fps
         SDL_Delay(1000 / 10);
